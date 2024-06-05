@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import TopNav from "@/components/navbar/TopNav";
 
 export const metadata: Metadata = {
   title: "MeetMatcher",
@@ -16,7 +17,10 @@ export default function RootLayout({
     <html lang="en">
       {/* Page content go here */}
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <TopNav />
+          {children}
+        </Providers>
       </body>
     </html>
   );
