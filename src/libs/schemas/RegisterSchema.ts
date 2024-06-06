@@ -1,7 +1,8 @@
 import { z, ZodType } from "zod";
-import { LoginFormType } from "../types/FormType";
+import { RegisterFormType } from "../types/FormType";
 
-export const loginSchema: ZodType<LoginFormType> = z.object({
+export const registerSchema: ZodType<RegisterFormType> = z.object({
+  name: z.string().min(3),
   email: z.string().email(),
   password: z
     .string()
