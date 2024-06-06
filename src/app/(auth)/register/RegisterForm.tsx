@@ -4,6 +4,7 @@ import { registerSchema } from "@/libs/schemas/RegisterSchema";
 import { RegisterFormType } from "@/libs/types/FormType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
+import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
@@ -68,6 +69,17 @@ export default function RegisterForm(): React.ReactElement {
             </Button>
           </div>
         </form>
+        <div className="flex justify-center items-center gap-1 h-[100px]">
+          <p>Already have an account?</p>
+          <span>
+            <Link
+              className="text-pink-500 hover:text-pink-300 font-semibold"
+              href={"/login"}
+            >
+              Sign In
+            </Link>
+          </span>
+        </div>
       </CardBody>
     </Card>
   );
