@@ -1,33 +1,31 @@
 "use client";
 
-import { LoginFormType } from "@/libs/types/FormType";
 import { Input } from "@nextui-org/react";
 import React, { ReactElement, useState } from "react";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import { FieldError, FieldValues, UseFormRegister, Path } from "react-hook-form";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { IoEyeSharp } from "react-icons/io5";
 
 type VariantType = "flat" | "bordered" | "faded" | "underlined";
-
 type InputType = "text" | "password";
 
-interface Props {
+interface Props<T extends FieldValues> {
   label: React.ReactNode;
   variant: VariantType;
   type?: InputType;
-  fieldName: keyof LoginFormType;
-  register: UseFormRegister<LoginFormType>;
+  fieldName: Path<T>;
+  register: UseFormRegister<T>;
   error?: FieldError | undefined;
 }
 
-export default function FormInput({
+export default function FormInput<T extends FieldValues>({
   label,
   variant,
   type = "text",
   fieldName,
   register,
   error,
-}: Props): ReactElement {
+}: Props<T>): ReactElement {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
