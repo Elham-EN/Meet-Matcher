@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Utility component classes */
+@layer components {
+  .vertical-center {
+    /* Navbar was taking 64px height of the screen */
+    height: calc(100vh - 64px);
+  }
+}

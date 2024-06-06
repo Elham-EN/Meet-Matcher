@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className="bg-red-100 h-screen">
         <Providers>
           <TopNav />
-          <main className="container mx-auto p-10">{children}</main>
+          <main className="container mx-auto">{children}</main>
         </Providers>
       </body>
     </html>
