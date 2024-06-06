@@ -16,10 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* Page content go here */}
-      <body>
+      <body className="bg-red-100 h-screen">
         <Providers>
           <TopNav />
-          {children}
+          <main className="container mx-auto p-10">{children}</main>
         </Providers>
       </body>
     </html>

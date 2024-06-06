@@ -6,7 +6,7 @@ import { FaRegSmile } from "react-icons/fa";
 
 export default function Home() {
   return (
-    <div className="h-screen flex flex-col justify-center items-center gap-5">
+    <div>
       <h1 className="text-2xl font-semibold">Next.js Full Stack Application</h1>
       <Button
         as={Link}
