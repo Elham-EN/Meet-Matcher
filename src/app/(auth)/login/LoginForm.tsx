@@ -1,23 +1,26 @@
 "use client";
 import FormInput from "@/components/form/FormInput";
+import { loginSchema } from "@/libs/schemas/LoginSchema";
+import { LoginFormType } from "@/libs/types/FormType";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
-
-export type LoginFormType = {
-  email: string;
-  password: string;
-};
 
 export default function LoginForm(): React.ReactElement {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<LoginFormType>();
+  } = useForm<LoginFormType>({
+    resolver: zodResolver(loginSchema),
+    // When user clicks in a field and start typing in the field and then
+    // clicks out of the field and get notifiy by validator if there is error
+    mode: "onTouched",
+  });
 
-  const onSubmitHandler = (data: any) => {
+  const onSubmitHandler = (data: LoginFormType) => {
     console.log(data);
     errors.email;
   };

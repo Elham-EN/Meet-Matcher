@@ -1,6 +1,6 @@
 "use client";
 
-import { LoginFormType } from "@/app/(auth)/login/LoginForm";
+import { LoginFormType } from "@/libs/types/FormType";
 import { Input } from "@nextui-org/react";
 import React, { ReactElement, useState } from "react";
 import { FieldError, UseFormRegister } from "react-hook-form";
@@ -52,7 +52,7 @@ export default function FormInput({
       variant={variant}
       type={type === "password" ? (isVisible ? "text" : "password") : "text"}
       endContent={PasswordToggle}
-      {...register(fieldName, { required: `${label} is required` })}
+      {...register(fieldName)}
       isInvalid={!!error}
       errorMessage={error?.message}
     />
