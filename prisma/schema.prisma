@@ -7,3 +7,44 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Create Relational Tables (Models)
+
+// The relationship is defined as a one-to-many relationship, where one User 
+// can have multiple Account records, but each Account record is associated 
+// with only one User.
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  passwordHash  String?
+  emailVerified DateTime?
+  image         String?
+  // indicating that a user can have multiple accounts
+  accounts      Account[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  // userId is a FK that reference the id field in the User model
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // The user field sets up the relationship with the User model, specifying the 
+  // foreign key (fields: [userId]) and the referenced key (references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // define a composite primary key, which is a primary key that consists of 
+  // multiple fields. Useful when you want to uniquely identify a record
+  @@id([provider, providerAccountId])
+}
