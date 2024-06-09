@@ -1,4 +1,5 @@
 "use client";
+import { registerUser } from "@/app/actions/authActions";
 import FormInput from "@/components/form/FormInput";
 import { registerSchema } from "@/libs/schemas/RegisterSchema";
 import { RegisterFormType } from "@/libs/types/FormType";
@@ -19,8 +20,9 @@ export default function RegisterForm(): React.ReactElement {
     mode: "onTouched",
   });
 
-  const onSubmitHandler = (data: RegisterFormType) => {
-    console.log(data);
+  const onSubmitHandler = async (data: RegisterFormType) => {
+    const result = await registerUser(data);
+    console.log(result);
   };
 
   return (
@@ -65,7 +67,7 @@ export default function RegisterForm(): React.ReactElement {
               type="submit"
               isDisabled={!isValid}
             >
-              Login
+              Register
             </Button>
           </div>
         </form>
