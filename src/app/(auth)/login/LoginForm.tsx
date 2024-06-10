@@ -10,6 +10,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function LoginForm(): React.ReactElement {
   const router = useRouter();
@@ -26,10 +27,13 @@ export default function LoginForm(): React.ReactElement {
 
   const onSubmitHandler = async (data: LoginFormType) => {
     const result = await signInUser(data);
+    console.log(result);
     if (result.status === "success") {
       router.push("/members");
+      toast.success("Sign in successfully");
     } else {
       console.error("Failed to login:", result.error);
+      toast.error("Invalid credentials");
     }
   };
 
