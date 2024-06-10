@@ -43,3 +43,11 @@ export async function registerUser(data: RegisterFormType): Promise<ActionResult
     return { status: "error", error: "Someting went wrong" };
   }
 }
+
+export async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({ where: { email } });
+}
+
+export async function getUserById(id: string) {
+  return prisma.user.findUnique({ where: { id } });
+}
