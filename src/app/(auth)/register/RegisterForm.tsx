@@ -78,7 +78,9 @@ export default function RegisterForm(): React.ReactElement {
               error={errors.password}
             />
             {errors.root?.serverError && (
-              <p className=" text-danger text-sm">{errors.root.serverError.message}</p>
+              <div className="bg-danger py-2 pl-2 rounded-lg">
+                <p className=" text-white text-sm">{errors.root.serverError.message}</p>
+              </div>
             )}
             <Button
               fullWidth
