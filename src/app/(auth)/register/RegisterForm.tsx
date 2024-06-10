@@ -14,15 +14,31 @@ export default function RegisterForm(): React.ReactElement {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
+    setError,
   } = useForm<RegisterFormType>({
-    resolver: zodResolver(registerSchema),
+    // resolver: zodResolver(registerSchema), // client-side validation
     mode: "onTouched",
   });
 
   const onSubmitHandler = async (data: RegisterFormType) => {
     const result = await registerUser(data);
-    console.log(result);
+    console.log("Result:", result);
+    if (result.status === "success") {
+      console.log("USer registered successfully");
+    } else {
+      // Hanlde Zod issue (ZodIssue[])
+      if (Array.isArray(result.error)) {
+        result.error.forEach((error) => {
+          const fieldName = error.path.join(".") as "email" | "password" | "name";
+          // Set error inside react-hook-form
+          setError(fieldName, { message: error.message });
+        });
+      } else {
+        // You can set a server error with root as the key
+        setError("root.serverError", { message: result.error });
+      }
+    }
   };
 
   return (
@@ -61,13 +77,17 @@ export default function RegisterForm(): React.ReactElement {
               fieldName="password"
               error={errors.password}
             />
+            {errors.root?.serverError && (
+              <p className=" text-danger text-sm">{errors.root.serverError.message}</p>
+            )}
             <Button
               fullWidth
               className="bg-pink-400 text-white text-lg"
               type="submit"
               isDisabled={!isValid}
+              isLoading={isSubmitting}
             >
-              Register
+              {!isSubmitting && "Register"}
             </Button>
           </div>
         </form>
