@@ -19,12 +19,13 @@ export default {
       async authorize(creds) {
         const validated = loginSchema.safeParse(creds);
         if (validated.success) {
+          console.log("Success");
+
           const { email, password } = validated.data;
           const user = await getUserByEmail(email);
           // Check if we got a user & check if password matches what they put
           // inside the form against the hased password.
-          if (!user || !(await compare(password, user.passwordHash as string)))
-            return null;
+          if (!user || !(await compare(password, user.passwordHash!))) return null;
           return user;
         }
         // If validation falied, they are not authorized

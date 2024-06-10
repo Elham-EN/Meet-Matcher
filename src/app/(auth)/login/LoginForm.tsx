@@ -1,4 +1,5 @@
 "use client";
+import { signInUser } from "@/app/actions/authActions";
 import FormInput from "@/components/form/FormInput";
 import { loginSchema } from "@/libs/schemas/LoginSchema";
 import { LoginFormType } from "@/libs/types/FormType";
@@ -8,12 +9,14 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { GiPadlock } from "react-icons/gi";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm(): React.ReactElement {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema),
     // When user clicks in a field and start typing in the field and then
@@ -21,9 +24,13 @@ export default function LoginForm(): React.ReactElement {
     mode: "onTouched",
   });
 
-  const onSubmitHandler = (data: LoginFormType) => {
-    console.log(data);
-    errors.email;
+  const onSubmitHandler = async (data: LoginFormType) => {
+    const result = await signInUser(data);
+    if (result.status === "success") {
+      router.push("/members");
+    } else {
+      console.error("Failed to login:", result.error);
+    }
   };
 
   return (
@@ -60,8 +67,9 @@ export default function LoginForm(): React.ReactElement {
               className="bg-pink-400 text-white text-lg"
               type="submit"
               isDisabled={!isValid}
+              isLoading={isSubmitting}
             >
-              Login
+              {!isSubmitting && "Login"}
             </Button>
           </div>
         </form>
