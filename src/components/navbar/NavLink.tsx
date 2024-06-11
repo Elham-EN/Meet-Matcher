@@ -1,3 +1,4 @@
+"use client";
 import { NavbarItem } from "@nextui-org/react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";

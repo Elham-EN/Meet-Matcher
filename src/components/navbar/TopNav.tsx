@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Button,
   Navbar,
@@ -13,14 +11,16 @@ import {
 import React, { useState } from "react";
 import { GiMatchHead } from "react-icons/gi";
 import NavLink from "./NavLink";
+import { auth } from "@/auth";
+import UserMenu from "./UserMenu";
 
-export default function TopNav(): React.ReactElement {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+// Server Component
+export default async function TopNav(): Promise<React.JSX.Element> {
+  const session = await auth();
   const menuItems = ["Matches", "Lists", "Messages"];
   const menuLinks = ["members", "lists", "messages"];
   return (
     <Navbar
-      onMenuOpenChange={setIsMenuOpen}
       maxWidth="xl"
       className="bg-gradient-to-r from-pink-400 to-pink-700"
       classNames={{
@@ -34,7 +34,7 @@ export default function TopNav(): React.ReactElement {
     >
       <NavbarContent>
         <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          // aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           className="md:hidden"
         />
         <NavbarBrand as={Link} href={"/"}>
@@ -51,17 +51,23 @@ export default function TopNav(): React.ReactElement {
         <NavLink href="/messages" label="Messages" />
       </NavbarContent>
       <NavbarContent justify="end">
-        <Button
-          variant="bordered"
-          className="text-white hidden lg:flex"
-          as={Link}
-          href="/login"
-        >
-          Login
-        </Button>
-        <Button variant="bordered" className="text-white" as={Link} href="/register">
-          Register
-        </Button>
+        {session?.user ? (
+          <UserMenu user={session.user} />
+        ) : (
+          <>
+            <Button
+              variant="bordered"
+              className="text-white hidden lg:flex"
+              as={Link}
+              href="/login"
+            >
+              Login
+            </Button>
+            <Button variant="bordered" className="text-white" as={Link} href="/register">
+              Register
+            </Button>
+          </>
+        )}
       </NavbarContent>
       <NavbarMenu>
         {menuItems.map((item, index) => (

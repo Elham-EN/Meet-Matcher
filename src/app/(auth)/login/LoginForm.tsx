@@ -30,6 +30,7 @@ export default function LoginForm(): React.ReactElement {
     console.log(result);
     if (result.status === "success") {
       router.push("/members");
+      router.refresh();
       toast.success("Sign in successfully");
     } else {
       console.error("Failed to login:", result.error);

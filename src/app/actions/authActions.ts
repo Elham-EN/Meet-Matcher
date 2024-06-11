@@ -1,5 +1,5 @@
 "use server"; // Executed in the server-side: Data Mutation
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { prisma } from "@/libs/prisma";
 import { registerSchema } from "@/libs/schemas/RegisterSchema";
 import { ActionResult } from "@/libs/types";
@@ -68,6 +68,10 @@ export async function registerUser(data: RegisterFormType): Promise<ActionResult
     console.log(error);
     return { status: "error", error: "Someting went wrong" };
   }
+}
+
+export async function signOutUser() {
+  await signOut({ redirectTo: "/" });
 }
 
 export async function getUserByEmail(email: string) {
