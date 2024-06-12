@@ -1,11 +1,15 @@
-import Link from "next/link";
 import React from "react";
+import { getMembers } from "../actions/memberActions";
 
-export default function MembersPage() {
+// Server Component
+export default async function MembersPage(): Promise<React.ReactElement> {
+  const members = await getMembers();
+
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Member Page</h1>
-      <Link href={"/"}>Go back to Homepage</Link>
+      <ul>
+        {members && members.map((member) => <li key={member.id}>{member.name}</li>)}
+      </ul>
     </div>
   );
 }
