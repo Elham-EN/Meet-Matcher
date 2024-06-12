@@ -12,48 +12,52 @@ interface MemberCardProps {
 
 function MemberCard({ member }: MemberCardProps): React.ReactElement {
   const [maxTextLength, setMaxTextLength] = useState(10);
-  const imageRef = useRef<HTMLImageElement>(null);
-  // Used to monitor changes in the width of the image. When the width changes,
-  // the handleResize function is called to adjust the maximum text length.
+  const cardRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const handleResize = () => {
-      if (imageRef.current) {
-        const width = imageRef.current.clientWidth;
+      if (cardRef.current) {
+        const width = cardRef.current.clientWidth;
         const newLength = Math.floor(width / 20); // Adjust this value as needed
         setMaxTextLength(newLength);
       }
     };
 
     const observer = new ResizeObserver(handleResize);
-    const currentImageRef = imageRef.current;
+    const currentCardRef = cardRef.current;
 
-    if (currentImageRef) {
-      observer.observe(currentImageRef);
+    if (currentCardRef) {
+      observer.observe(currentCardRef);
     }
 
     // Initial call to set the max length
     handleResize();
 
     return () => {
-      if (currentImageRef) {
-        observer.unobserve(currentImageRef);
+      if (currentCardRef) {
+        observer.unobserve(currentCardRef);
       }
     };
   }, []);
 
   return (
-    <Card fullWidth as={Link} href={`/members/${member.userId}`}>
+    <Card
+      ref={cardRef}
+      className="w-full max-w-xs md:max-w-sm lg:max-w-md"
+      as={Link}
+      href={`/members/${member.userId}`}
+    >
       <Image
         src={member.image || "images/user.png"}
         alt={member.name}
+        width="100%"
+        height="auto"
         isZoomed
-        width={300}
-        className="aspect-square object-cover"
-        ref={imageRef}
+        className="w-full h-auto aspect-square object-cover"
       />
       <CardFooter
         className="flex justify-start bg-black overflow-hidden absolute 
-                   bottom-0 z-10 bg-dark-gradient"
+        bottom-0 z-10 bg-dark-gradient"
       >
         <div className="flex flex-col text-white">
           <span className="text-lg font-semibold">
