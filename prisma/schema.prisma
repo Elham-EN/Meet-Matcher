@@ -62,9 +62,9 @@ model Member {
   city          String
   country       String
   image         String? // Optional
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now())
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  created       DateTime    @default(now())
+  updated       DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   photos        Photo[]  
 }
 
