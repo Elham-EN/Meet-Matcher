@@ -22,8 +22,9 @@ model User {
   image         String?
   // indicating that a user can have multiple accounts
   accounts      Account[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  member        Member?
 }
 
 model Account {
@@ -47,4 +48,31 @@ model Account {
   // define a composite primary key, which is a primary key that consists of 
   // multiple fields. Useful when you want to uniquely identify a record
   @@id([provider, providerAccountId])
+}
+
+// Our user have a relationship with the member, and one user is related to 
+// one member. So the relation is 1:1 OR one-to-one relationship
+model Member {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  name          String    
+  gender        String
+  dateOfBirth   DateTime 
+  description   String
+  city          String
+  country       String
+  image         String? // Optional
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  photos        Photo[]  
+}
+
+// One-to-Many Relationship: Member can have many photos
+model Photo {
+  id        String    @id @default(cuid())
+  url       String
+  publicId  String?
+  memberId  String // Foreign Key
+  member    Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
 }
