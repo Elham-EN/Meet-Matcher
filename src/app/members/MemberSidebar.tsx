@@ -17,7 +17,7 @@ export default function MemberSidebar({ member }: Props): ReactElement {
   const basePath = `/members/${member.userId}`;
   const navLinks = [
     { name: "Profile", href: `${basePath}` },
-    { name: "Photos", href: `${basePath}/photo` },
+    { name: "Photos", href: `${basePath}/photos` },
     { name: "Chat", href: `${basePath}/chat` },
   ];
 
