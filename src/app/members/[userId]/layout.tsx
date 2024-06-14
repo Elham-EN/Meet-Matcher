@@ -1,8 +1,9 @@
 import { getMemberByUserId } from "@/app/actions/memberActions";
-import React, { ReactElement } from "react";
+import React, { ReactElement, Suspense } from "react";
 import MemberSidebar from "../MemberSidebar";
 import { notFound } from "next/navigation";
 import { Card } from "@nextui-org/react";
+import LoadingSpinner from "./loading";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,7 +19,9 @@ async function layout({ children, params }: LayoutProps): Promise<ReactElement> 
         <MemberSidebar member={member} />
       </div>
       <div className="col-span-9">
-        <Card className="w-full mt-10 h-[80vh]">{children}</Card>
+        <Card className="w-full mt-10 h-[80vh]">
+          <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
+        </Card>
       </div>
     </div>
   );
