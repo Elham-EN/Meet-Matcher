@@ -65,7 +65,11 @@ model Member {
   created       DateTime    @default(now())
   updated       DateTime    @default(now())
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  photos        Photo[]  
+  photos        Photo[]
+  // This setup many-to-many relationship: One member can like many other members and 
+  // many other member can like that one member.
+  sourceLikes Like[] @relation("source")
+  targetLike  Like[] @relation("target")  
 }
 
 // One-to-Many Relationship: Member can have many photos
@@ -75,4 +79,16 @@ model Photo {
   publicId  String?
   memberId  String // Foreign Key
   member    Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+}
+ // Have relationship with source member and for this we have two relation pointing to
+ // the "Like" table from "Member" table. This table will act as join table between
+ // the members
+model Like {
+  sourceUserId String
+  sourceMember Member @relation("source", fields: [sourceUserId], references: [userId], onDelete: Cascade)
+
+  targetUserId String
+  targetMember Member @relation("target", fields: [targetUserId], references: [userId], onDelete: Cascade)
+
+  @@id([sourceUserId, targetUserId]) 
 }
