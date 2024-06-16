@@ -1,4 +1,5 @@
 "use client";
+import LikeButton from "@/components/LikeButton";
 import { calculateAge } from "@/libs/utils/date-manipulation";
 import { truncateText } from "@/libs/utils/string-manipulation";
 import { Card, CardFooter, Image } from "@nextui-org/react";
@@ -55,6 +56,9 @@ function MemberCard({ member }: MemberCardProps): React.ReactElement {
         isZoomed
         className="w-full h-auto aspect-square object-cover"
       />
+      <div className="absolute top-3 right-3 z-50">
+        <LikeButton targetId={member.userId} hasLiked={true} />
+      </div>
       <CardFooter
         className="flex justify-start bg-black overflow-hidden absolute 
         bottom-0 z-10 bg-dark-gradient"
