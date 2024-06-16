@@ -9,11 +9,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 interface MemberCardProps {
   member: Member;
+  likeIds: string[];
 }
 
-function MemberCard({ member }: MemberCardProps): React.ReactElement {
+function MemberCard({ member, likeIds }: MemberCardProps): React.ReactElement {
   const [maxTextLength, setMaxTextLength] = useState(10);
   const cardRef = useRef<HTMLDivElement>(null);
+  const hasLiked = likeIds.includes(member.userId);
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,6 +43,17 @@ function MemberCard({ member }: MemberCardProps): React.ReactElement {
     };
   }, []);
 
+  // stop the default action of a link and prevent the event from propagating further
+  // up the DOM tree. Stops the event from bubbling up to parent elements, which
+  // prevents any parent handlers from being triggered.
+  const preventLinkAction = (event: React.MouseEvent) => {
+    event.preventDefault();
+    // The preventLinkAction function is used on a div that wraps the LikeButton.
+    // When the LikeButton is clicked, the default link navigation is prevented,
+    // and the click event does not propagate to the Card component.
+    event.stopPropagation();
+  };
+
   return (
     <Card
       ref={cardRef}
@@ -56,8 +69,10 @@ function MemberCard({ member }: MemberCardProps): React.ReactElement {
         isZoomed
         className="w-full h-auto aspect-square object-cover"
       />
-      <div className="absolute top-3 right-3 z-50">
-        <LikeButton targetId={member.userId} hasLiked={true} />
+      <div onClick={preventLinkAction}>
+        <div className="absolute top-3 right-3 z-50">
+          <LikeButton targetId={member.userId} hasLiked={hasLiked} />
+        </div>
       </div>
       <CardFooter
         className="flex justify-start bg-black overflow-hidden absolute 
