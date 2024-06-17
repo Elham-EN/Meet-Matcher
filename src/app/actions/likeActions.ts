@@ -2,6 +2,7 @@
 
 import { prisma } from "@/libs/prisma";
 import { getAuthUserId } from "./authActions";
+import MemberType from "@/libs/types/MemberType";
 
 /**
  * This function allow user to toggle the like status between one user and another.
@@ -47,7 +48,7 @@ export async function toggleLikeMember(targetUserId: string, isLiked: boolean) {
  * This help to update the user interface to display the fact that they liked
  * another user.
  */
-export async function fetchCurrentUserLikeIds() {
+export async function fetchCurrentUserLikeIds(): Promise<string[]> {
   try {
     const userId = await getAuthUserId();
     // Get a list of user IDs that this current user has liked
@@ -65,4 +66,67 @@ export async function fetchCurrentUserLikeIds() {
     console.error(error);
     throw error;
   }
+}
+
+type UserType = "source" | "target" | "mutual" | null;
+
+/**
+ * Get list of liked members by the current user. Type can be about the current
+ * user is the source likes a target user
+ * @param type - source user or target user
+ */
+export async function fetchLikedMembers(type: UserType | string = "source") {
+  try {
+    // Get current user of the app
+    const userId = await getAuthUserId();
+
+    switch (type) {
+      case "source":
+        return await fetchSourceLikes(userId);
+      case "target":
+        return await fetchTargetLikes(userId);
+      case "mutual":
+        return await fetchMutualLikes(userId);
+      default:
+        return [];
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+// Return other members that current user liked
+async function fetchSourceLikes(userId: string): Promise<MemberType[]> {
+  const sourceList = await prisma.like.findMany({
+    where: { sourceUserId: userId },
+    select: { targetMember: true },
+  });
+  return sourceList.map((x) => x.targetMember) as MemberType[];
+}
+
+async function fetchTargetLikes(userId: string): Promise<MemberType[]> {
+  const targetList = await prisma.like.findMany({
+    where: { targetUserId: userId },
+    select: { sourceMember: true },
+  });
+  return targetList.map((x) => x.sourceMember) as MemberType[];
+}
+
+// Give us mutual likes between two members
+async function fetchMutualLikes(userId: string): Promise<MemberType[]> {
+  // Get list of members (source user has liked)
+  const likedUsers = await prisma.like.findMany({
+    where: { sourceUserId: userId },
+    select: { targetUserId: true },
+  });
+  const likedIds: string[] = likedUsers.map((x) => x.targetUserId);
+  // Then find out if any of those users Ids are inside the target members as well
+  const mutualList = await prisma.like.findMany({
+    where: {
+      AND: [{ targetUserId: userId }, { sourceUserId: { in: likedIds } }],
+    },
+    select: { sourceMember: true },
+  });
+  return mutualList.map((x) => x.sourceMember) as MemberType[];
 }
