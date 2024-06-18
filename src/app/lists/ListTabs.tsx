@@ -2,8 +2,9 @@
 import { Tab, Tabs } from "@nextui-org/react";
 import { Member } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { Key } from "react";
+import React, { Key, useTransition } from "react";
 import MemberCard from "../members/MemberCard";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface ListTabsProps {
   members: Member[];
@@ -15,6 +16,7 @@ type UserType = "source" | "target" | "mutual";
 type TabType = { id: UserType; label: string };
 
 function ListTabs({ members, likeIds }: ListTabsProps): React.ReactElement {
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams(); // current URL's search params
   const router = useRouter();
   const pathname = usePathname(); // current URL's pathname
@@ -27,12 +29,15 @@ function ListTabs({ members, likeIds }: ListTabsProps): React.ReactElement {
   // When clicking on different tabs - the function is updating the query string
   // in the URL and using that tab to identify which method condition is going to
   // call inside the fetch likes (action methods)
-  const handleTabChange = (key: Key) => {
-    // Modify the query string when tab clicked
-    const params = new URLSearchParams(searchParams);
-    // Set the query string
-    params.set("type", key.toString());
-    router.replace(`${pathname}?${params.toString()}`);
+  const handleTabChange = (key: Key): void => {
+    // Start Transition set isPending to true and set loading spinner
+    startTransition(() => {
+      // Modify the query string when tab clicked
+      const params = new URLSearchParams(searchParams);
+      // Set the query string
+      params.set("type", key.toString());
+      router.replace(`${pathname}?${params.toString()}`);
+    });
   };
 
   return (
@@ -45,17 +50,25 @@ function ListTabs({ members, likeIds }: ListTabsProps): React.ReactElement {
       >
         {(item) => (
           <Tab key={item.id} title={item.label}>
-            {members.length > 0 ? (
-              <div
-                className="px-2 grid grid-cols-2 sm:grid-cols-3 
-              lg:grid-cols-4 xl:grid-cols-6 gap-6 justify-items-center"
-              >
-                {members.map((member) => (
-                  <MemberCard key={member.id} member={member} likeIds={likeIds} />
-                ))}
+            {isPending ? (
+              <div>
+                <LoadingSpinner />
               </div>
             ) : (
-              <div>No members for this filter</div>
+              <>
+                {members.length > 0 ? (
+                  <div
+                    className="px-2 grid grid-cols-2 sm:grid-cols-3 
+              lg:grid-cols-4 xl:grid-cols-6 gap-6 justify-items-center"
+                  >
+                    {members.map((member) => (
+                      <MemberCard key={member.id} member={member} likeIds={likeIds} />
+                    ))}
+                  </div>
+                ) : (
+                  <div>No members for this filter</div>
+                )}
+              </>
             )}
           </Tab>
         )}
