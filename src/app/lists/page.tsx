@@ -6,9 +6,8 @@ interface ListPageProps {
   searchParams: { type: string };
 }
 
-export default async function ListPage({
-  searchParams,
-}: ListPageProps): Promise<ReactElement> {
+// Server Component
+async function ListPage({ searchParams }: ListPageProps): Promise<ReactElement> {
   const likeIds = await fetchCurrentUserLikeIds();
   const members = await fetchLikedMembers(searchParams.type);
   return (
@@ -17,3 +16,5 @@ export default async function ListPage({
     </div>
   );
 }
+
+export default ListPage;

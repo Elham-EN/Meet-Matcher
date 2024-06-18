@@ -19,9 +19,9 @@ function ListTabs({ members, likeIds }: ListTabsProps): React.ReactElement {
   const router = useRouter();
   const pathname = usePathname(); // current URL's pathname
   const tabs: TabType[] = [
-    { id: "source", label: "Members I have liked" },
-    { id: "target", label: "Members that liked me" },
-    { id: "mutual", label: "Mutual like" },
+    { id: "source", label: "Members I like to team up with" },
+    { id: "target", label: "Members that wants to team up with me" },
+    { id: "mutual", label: "We both like to partner up" },
   ];
 
   // When clicking on different tabs - the function is updating the query string

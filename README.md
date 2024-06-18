@@ -1,6 +1,10 @@
-## What is MeetMatcher
+## What is it?
 
-A social networking platform where you can make friend from around the world.
+BizBuddy is a website where people can find others with different skills to start businesses together. It helps match users based on their skills and interests.
+
+## Why?
+
+Many people have good business ideas but need help in areas where they lack skills. PartnerQuest helps them find the right partners to work with, making it easier to start and grow successful businesses.
 
 ## Getting Started
 

@@ -40,8 +40,8 @@ export default async function TopNav(): Promise<React.JSX.Element> {
         <NavbarBrand as={Link} href={"/"}>
           <GiMatchHead size={40} className="text-gray-200" />
           <div className="font-bold text-3xl flex">
-            <span className="text-gray-900">Meet</span>
-            <span className="text-gray-200">Matcher</span>
+            <span className="text-gray-900">Biz</span>
+            <span className="text-gray-200">Buddy</span>
           </div>
         </NavbarBrand>
       </NavbarContent>
