@@ -7,19 +7,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { ReactElement } from "react";
 
+type NavLinkType = { name: string; href: string };
 interface Props {
   member: Member;
+  navLinks: NavLinkType[];
 }
 
-export default function MemberSidebar({ member }: Props): ReactElement {
+export default function MemberSidebar({ member, navLinks }: Props): ReactElement {
   // e.g. /members/clxbgdzxj000311miy0jnlqeb
   const pathname = usePathname();
-  const basePath = `/members/${member.userId}`;
-  const navLinks = [
-    { name: "Profile", href: `${basePath}` },
-    { name: "Photos", href: `${basePath}/photos` },
-    { name: "Chat", href: `${basePath}/chat` },
-  ];
 
   return (
     <Card className="w-full mt-10 items-center h-[80vh]">
