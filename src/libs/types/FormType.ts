@@ -8,3 +8,10 @@ export type RegisterFormType = {
   email: string;
   password: string;
 };
+
+export type MemberEditFormType = {
+  name: string;
+  description: string;
+  city: string;
+  country: string;
+};
