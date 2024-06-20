@@ -3,6 +3,7 @@ import { registerUser } from "@/app/actions/authActions";
 import FormInput from "@/components/form/FormInput";
 import { registerSchema } from "@/libs/schemas/RegisterSchema";
 import { RegisterFormType } from "@/libs/types/FormType";
+import { handleFormServerErrors } from "@/libs/utils/formUil";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react";
 import Link from "next/link";
@@ -28,16 +29,7 @@ export default function RegisterForm(): React.ReactElement {
       console.log("USer registered successfully");
     } else {
       // Hanlde Zod issue (ZodIssue[])
-      if (Array.isArray(result.error)) {
-        result.error.forEach((error) => {
-          const fieldName = error.path.join(".") as "email" | "password" | "name";
-          // Set error inside react-hook-form
-          setError(fieldName, { message: error.message });
-        });
-      } else {
-        // You can set a server error with root as the key
-        setError("root.serverError", { message: result.error });
-      }
+      handleFormServerErrors<RegisterFormType>(result, setError);
     }
   };
 

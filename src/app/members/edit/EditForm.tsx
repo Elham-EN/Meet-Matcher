@@ -1,4 +1,5 @@
 "use client";
+import { updateMemberProfile } from "@/app/actions/userActions";
 import FormInput from "@/components/form/FormInput";
 import { memberEditSchema } from "@/libs/schemas/MemberEditSchema";
 import { MemberEditFormType } from "@/libs/types/FormType";
@@ -6,17 +7,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Textarea } from "@nextui-org/react";
 import { Member } from "@prisma/client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { handleFormServerErrors } from "@/libs/utils/formUil";
 
 interface Props {
   member: Member;
 }
 
 function EditForm({ member }: Props): React.ReactElement {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { isValid, isDirty, isSubmitting, errors },
   } = useForm<MemberEditFormType>({
     resolver: zodResolver(memberEditSchema),
@@ -35,8 +41,16 @@ function EditForm({ member }: Props): React.ReactElement {
     }
   }, [member, reset]);
 
-  const onSubmit = (data: MemberEditFormType) => {
-    console.log(data);
+  const onSubmit = async (data: MemberEditFormType): Promise<void> => {
+    const result = await updateMemberProfile(data);
+    if (result.status === "success") {
+      toast.success("Profile updated");
+      router.refresh();
+      // Reset the form to have what is inside the updated 'data'
+      reset({ ...data });
+    } else {
+      handleFormServerErrors<MemberEditFormType>(result, setError);
+    }
   };
 
   return (
@@ -75,6 +89,11 @@ function EditForm({ member }: Props): React.ReactElement {
           error={errors.country}
         />
       </div>
+      {errors.root?.serverError && (
+        <div className="bg-danger py-2 pl-2 rounded-lg">
+          <p className=" text-white text-sm">{errors.root.serverError.message}</p>
+        </div>
+      )}
       <Button
         type="submit"
         className="flex self-end bg-pink-600 text-white"
