@@ -4,7 +4,7 @@ BizBuddy is a website where people can find others with different skills to star
 
 ## Why?
 
-Many people have good business ideas but need help in areas where they lack skills. PartnerQuest helps them find the right partners to work with, making it easier to start and grow successful businesses.
+Many people have good business ideas but need help in areas where they lack skills. BizBuddy helps them find the right partners to work with, making it easier to start and grow successful businesses.
 
 ## Getting Started
 
