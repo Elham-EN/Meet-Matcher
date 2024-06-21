@@ -1,3 +1,4 @@
+"use client";
 import { CldUploadButton } from "next-cloudinary";
 import React, { ReactElement } from "react";
 import { HiPhoto } from "react-icons/hi2";
@@ -12,7 +13,7 @@ export default function ImageUploadButton(): ReactElement {
     <CldUploadButton
       options={{ maxFiles: 1 }}
       onSuccess={(res) => console.log(res)}
-      signatureEndpoint={"/api/sign-image"}
+      signatureEndpoint={"/api/sign-image"} // API Request to this endpoint
       uploadPreset="nm-nextJS-app"
       className="flex items-center gap-2 bg-pink-600 text-white 
         rounded-lg py-2 px-2 hover:bg-pink-600/70"

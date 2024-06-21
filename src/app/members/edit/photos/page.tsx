@@ -1,6 +1,7 @@
 import { getAuthUserId } from "@/app/actions/authActions";
 import { getMemberPhotosByUserId } from "@/app/actions/memberActions";
 import DeleteButton from "@/components/button/DeleteButton";
+import ImageUploadButton from "@/components/button/ImageUploadButton";
 import StarButton from "@/components/button/StarButton";
 import { CardHeader, Divider, CardBody, Image } from "@nextui-org/react";
 import React, { ReactElement } from "react";
@@ -15,6 +16,9 @@ export default async function PhotoPage(): Promise<ReactElement> {
       </CardHeader>
       <Divider />
       <CardBody>
+        <div className="pt-5 pl-5">
+          <ImageUploadButton />
+        </div>
         <div className="grid grid-cols-5 gap-3 p-5">
           {photos &&
             photos.map((photo) => (
