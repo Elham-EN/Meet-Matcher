@@ -33,3 +33,30 @@ export async function updateMemberProfile(
     return { status: "error", error: "Something wen wrong" };
   }
 }
+
+// Add image to databse after the image has been successfully
+// uploaded to cloudinary
+export async function addImage(url: string, publicId: string) {
+  try {
+    // Get current authenticad user
+    const userId = await getAuthUserId();
+    // Update the database with user photos
+    return prisma.member.update({
+      where: { userId },
+      data: {
+        photos: {
+          // photos is a collection
+          create: [
+            {
+              url,
+              publicId,
+            },
+          ],
+        },
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
