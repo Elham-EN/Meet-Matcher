@@ -12,12 +12,12 @@ export default async function PhotoPage(): Promise<ReactElement> {
   const photos = await getMemberPhotosByUserId(userId);
   return (
     <>
-      <CardHeader className="text-2xl font-semibold text-pink-600 italic">
-        Edit Profile
+      <CardHeader className="flex flex-row items-center justify-between px-3">
+        <h1 className="text-2xl font-semibold text-pink-600 italic">Edit Profile</h1>
+        <MemberPhotoUpload />
       </CardHeader>
       <Divider />
       <CardBody>
-        <MemberPhotoUpload />
         <MemberPhotos photos={photos!} editing={true} mainImageUrl={member?.image} />
       </CardBody>
     </>

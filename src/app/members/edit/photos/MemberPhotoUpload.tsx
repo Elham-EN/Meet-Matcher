@@ -17,7 +17,7 @@ export default function MemberPhotoUpload(): ReactElement {
     }
   };
   return (
-    <div className="pt-5 pl-5">
+    <div className="">
       <ImageUploadButton onUploadImage={onAddImage} />
     </div>
   );

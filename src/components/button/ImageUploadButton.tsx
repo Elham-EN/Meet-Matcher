@@ -19,7 +19,7 @@ function ImageUploadButton({ onUploadImage }: Props): ReactElement {
       onSuccess={onUploadImage}
       signatureEndpoint={"/api/sign-image"} // API Request to this endpoint
       uploadPreset="nm-nextJS-app"
-      className="flex items-center gap-2 bg-pink-600 text-white 
+      className="flex items-center gap-2 bg-pink-500 text-white 
         rounded-lg py-2 px-2 hover:bg-pink-600/70"
     >
       <HiPhoto />
