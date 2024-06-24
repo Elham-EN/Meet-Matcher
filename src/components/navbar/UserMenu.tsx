@@ -14,11 +14,14 @@ import Link from "next/link";
 import React, { ReactElement } from "react";
 
 interface UserMenuProps {
-  user: Session["user"];
+  userInfo: {
+    name: string | null;
+    image: string | null;
+  } | null;
 }
 
 // Component client
-function UserMenu({ user }: UserMenuProps): ReactElement {
+function UserMenu({ userInfo }: UserMenuProps): ReactElement {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -26,9 +29,9 @@ function UserMenu({ user }: UserMenuProps): ReactElement {
           isBordered={true}
           as={"button"}
           className="transition-transform"
-          name={user?.name || "user avatar"}
+          name={userInfo?.name || "user avatar"}
           size="md"
-          src={user?.image || "/images/user.png"}
+          src={userInfo?.image || "/images/user.png"}
         />
       </DropdownTrigger>
       <DropdownMenu className="text-black" variant="flat" aria-label="User actions menu">
@@ -39,7 +42,7 @@ function UserMenu({ user }: UserMenuProps): ReactElement {
             className="h-14 flex flex-row"
             aria-label="username"
           >
-            Signed in as {user?.name}
+            Signed in as {userInfo?.name}
           </DropdownItem>
         </DropdownSection>
         <DropdownItem color="danger" as={Link} href="/members/edit">

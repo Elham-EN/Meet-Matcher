@@ -13,10 +13,14 @@ import { GiMatchHead } from "react-icons/gi";
 import NavLink from "./NavLink";
 import { auth } from "@/auth";
 import UserMenu from "./UserMenu";
+import { getUserInfoForNav } from "@/app/actions/userActions";
 
 // Server Component
 export default async function TopNav(): Promise<React.JSX.Element> {
   const session = await auth();
+  // First check if user session exist, if exist then get the
+  // lastest user data: name and image
+  const userInfo = session?.user && (await getUserInfoForNav());
   const menuItems = ["Matches", "Lists", "Messages"];
   const menuLinks = ["members", "lists", "messages"];
   return (
@@ -51,8 +55,8 @@ export default async function TopNav(): Promise<React.JSX.Element> {
         <NavLink href="/messages" label="Messages" />
       </NavbarContent>
       <NavbarContent justify="end">
-        {session?.user ? (
-          <UserMenu user={session.user} />
+        {userInfo ? (
+          <UserMenu userInfo={userInfo} />
         ) : (
           <>
             <Button

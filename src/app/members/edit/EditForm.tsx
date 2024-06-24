@@ -42,7 +42,8 @@ function EditForm({ member }: Props): React.ReactElement {
   }, [member, reset]);
 
   const onSubmit = async (data: MemberEditFormType): Promise<void> => {
-    const result = await updateMemberProfile(data);
+    const nameupdated: boolean = data.name !== member.name;
+    const result = await updateMemberProfile(data, nameupdated);
     if (result.status === "success") {
       toast.success("Profile updated");
       router.refresh();

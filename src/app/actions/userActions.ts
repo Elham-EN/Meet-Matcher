@@ -8,7 +8,8 @@ import { memberEditSchema } from "@/libs/schemas/MemberEditSchema";
 import { prisma } from "@/libs/prisma";
 
 export async function updateMemberProfile(
-  data: MemberEditFormType
+  data: MemberEditFormType,
+  nameUpdated: boolean
 ): Promise<ActionResult<Member>> {
   try {
     const userId = await getAuthUserId();
@@ -27,6 +28,14 @@ export async function updateMemberProfile(
         country,
       },
     });
+    if (nameUpdated) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          name: name,
+        },
+      });
+    }
     return { status: "success", data: member };
   } catch (error) {
     console.error(error);
@@ -81,6 +90,22 @@ export async function setMainImage(photo: Photo) {
     });
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+/**
+ * Get latest user data for navigation bar
+ */
+export async function getUserInfoForNav() {
+  try {
+    const userId = await getAuthUserId();
+    return prisma.user.findUnique({
+      where: { id: userId },
+      select: { name: true, image: true },
+    });
+  } catch (error) {
+    console.error(error);
     throw error;
   }
 }
