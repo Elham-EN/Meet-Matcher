@@ -5,7 +5,7 @@ import { Photo } from "@prisma/client";
 import React, { ReactElement, useState } from "react";
 import MemberImage from "./MemberImage";
 import { useRouter } from "next/navigation";
-import { setMainImage } from "../actions/userActions";
+import { deleteImage, setMainImage } from "../actions/userActions";
 
 interface Props {
   photos: Photo[] | null;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 type LoadingType = {
-  type: "main" | "";
+  type: "main" | "delete" | "";
   isLoading: boolean;
   id: string;
 };
@@ -33,6 +33,15 @@ function MemberPhotos({ photos, editing, mainImageUrl }: Props): ReactElement {
     if (photo.url === mainImageUrl) return;
     setLoading({ isLoading: true, id: photo.id, type: "main" });
     await setMainImage(photo);
+    router.refresh();
+    setLoading({ isLoading: false, id: "", type: "" });
+  };
+
+  const onDelete = async (photo: Photo): Promise<void> => {
+    // Check if this photo is already the main image URL
+    if (photo.url === mainImageUrl) return;
+    setLoading({ isLoading: true, id: photo.id, type: "delete" });
+    await deleteImage(photo);
     router.refresh();
     setLoading({ isLoading: false, id: "", type: "" });
   };
@@ -58,8 +67,17 @@ function MemberPhotos({ photos, editing, mainImageUrl }: Props): ReactElement {
                     }
                   />
                 </div>
-                <div className="absolute top-3 right-3 z-50">
-                  <DeleteButton loading={false} />
+                <div
+                  onClick={() => onDelete(photo)}
+                  className="absolute top-3 right-3 z-50"
+                >
+                  <DeleteButton
+                    loading={
+                      loading.isLoading &&
+                      loading.type === "delete" &&
+                      loading.id === photo.id
+                    }
+                  />
                 </div>
               </>
             )}
