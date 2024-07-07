@@ -68,8 +68,10 @@ model Member {
   photos        Photo[]
   // This setup many-to-many relationship: One member can like many other members and 
   // many other member can like that one member.
-  sourceLikes Like[] @relation("source")
-  targetLike  Like[] @relation("target")  
+  sourceLikes   Like[] @relation("source")
+  targetLike    Like[] @relation("target")  
+  senderMessages Message[] @relation("sender")
+  recipientMessages  Message[] @relation("recipient")
 }
 
 // One-to-Many Relationship: Member can have many photos
@@ -91,4 +93,20 @@ model Like {
   targetMember Member @relation("target", fields: [targetUserId], references: [userId], onDelete: Cascade)
 
   @@id([sourceUserId, targetUserId]) 
+}
+
+// Relationship: Many-to-Many: One member can send many messges to other user and
+// that user can receive many messages
+model Message {
+  id                  String        @id @default(cuid())
+  text                String
+  created             DateTime      @default(now())
+  senderId            String?
+  recipientId         String?
+  // Have two relations pointing to the Member's table
+  sender              Member?        @relation("sender", fields: [senderId], references: [userId], onDelete: SetNull)
+  recipient           Member?       @relation("recipient", fields: [recipientId], references: [userId], onDelete: SetNull)
+  dateRead            DateTime?
+  senderDeleted       Boolean       @default(false)
+  recipientDeleted    Boolean       @default(false)
 }
