@@ -1,7 +1,7 @@
 import React from "react";
 import { getMembers } from "../actions/memberActions";
-import MemberCard from "./MemberCard";
 import { fetchCurrentUserLikeIds } from "../actions/likeActions";
+import MemberCard from "@/components/Members/MemberCard";
 
 // Server Component
 export default async function MembersPage(): Promise<React.ReactElement> {

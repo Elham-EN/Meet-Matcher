@@ -3,7 +3,7 @@ import { getMemberByUserId, getMemberPhotosByUserId } from "@/app/actions/member
 import { CardHeader, Divider, CardBody, Image } from "@nextui-org/react";
 import React, { ReactElement } from "react";
 import MemberPhotoUpload from "./MemberPhotoUpload";
-import MemberPhotos from "../../MemberPhotos";
+import MemberPhotos from "@/components/Members/MemberPhotos";
 
 export default async function PhotoPage(): Promise<ReactElement> {
   const userId = await getAuthUserId();

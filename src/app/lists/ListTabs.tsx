@@ -3,8 +3,8 @@ import { Tab, Tabs } from "@nextui-org/react";
 import { Member } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { Key, useTransition } from "react";
-import MemberCard from "../members/MemberCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import MemberCard from "@/components/Members/MemberCard";
 
 interface ListTabsProps {
   members: Member[];

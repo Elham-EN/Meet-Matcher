@@ -5,7 +5,7 @@ import { Photo } from "@prisma/client";
 import React, { ReactElement, useState } from "react";
 import MemberImage from "./MemberImage";
 import { useRouter } from "next/navigation";
-import { deleteImage, setMainImage } from "../actions/userActions";
+import { deleteImage, setMainImage } from "@/app/actions/userActions";
 
 interface Props {
   photos: Photo[] | null;

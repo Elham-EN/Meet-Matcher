@@ -1,9 +1,9 @@
 import { getMemberByUserId } from "@/app/actions/memberActions";
 import React, { ReactElement, Suspense } from "react";
-import MemberSidebar from "../MemberSidebar";
 import { notFound } from "next/navigation";
 import { Card } from "@nextui-org/react";
 import LoadingSpinner from "./loading";
+import MemberSidebar from "@/components/Members/MemberSidebar";
 
 interface LayoutProps {
   children: React.ReactNode;
