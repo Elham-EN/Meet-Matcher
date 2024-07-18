@@ -1,6 +1,5 @@
-import CardInnerWrapper from "@/components/CardInnerWrapper";
-
 import React, { ReactElement } from "react";
+import CardInnerWrapper from "@/components/CardInnerWrapper";
 import ChatForm from "./ChatForm";
 import { getMessageThread } from "@/app/actions/messageActions";
 
@@ -8,7 +7,7 @@ interface Props {
   params: { userId: string };
 }
 
-export default async function ChatPage({ params }: Props): Promise<ReactElement> {
+async function ChatPage({ params }: Props): Promise<ReactElement> {
   const messages = await getMessageThread(params.userId);
   console.log("====================================");
   console.log(messages);
@@ -21,3 +20,5 @@ export default async function ChatPage({ params }: Props): Promise<ReactElement>
     />
   );
 }
+
+export default ChatPage;
