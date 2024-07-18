@@ -1,12 +1,11 @@
 "use client";
 
 import { createMessage } from "@/app/actions/messageActions";
-import FormInput from "@/components/form/FormInput";
 import { messageSchema } from "@/libs/schemas/MessageSchema";
 import { MessageType } from "@/libs/types/MessageType";
 import { handleFormServerErrors } from "@/libs/utils/formUil";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useParams, useRouter } from "next/navigation";
 import React, { ReactElement } from "react";
 import { useForm } from "react-hook-form";
@@ -40,13 +39,13 @@ export default function ChatForm(): ReactElement {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <div className="flex items-center gap-3">
-        <FormInput
-          label={"Type a message"}
-          fieldName="text"
-          type="text"
+        <Input
+          placeholder="Type a message"
           variant="faded"
-          register={register}
-          error={errors.text}
+          {...register("text")}
+          isInvalid={!!errors.text}
+          errorMessage={errors.text?.message}
+          size="lg"
         />
         <Button
           type="submit"
