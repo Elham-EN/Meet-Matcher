@@ -1,7 +1,9 @@
+"use client";
+
 import { MessageDto } from "@/libs/types";
 import { Avatar } from "@nextui-org/react";
 import clsx from "clsx";
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect, useRef } from "react";
 
 interface Props {
   message: MessageDto;
@@ -12,6 +14,13 @@ function MessageBox({ message, currentUserId }: Props): ReactElement {
   // Need to know if the current logged in user is the sender of
   // the message or not
   const isCurrentUserSender = message.senderId === currentUserId;
+  const messageEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messageEndRef]);
 
   const renderAvatar = (): ReactElement => (
     <Avatar
@@ -64,6 +73,9 @@ function MessageBox({ message, currentUserId }: Props): ReactElement {
         {renderMessageContent()}
         {isCurrentUserSender && renderAvatar()}
       </div>
+      {/* When called on an element, it scrolls the page so that the 
+          element is visible in the viewport. */}
+      <div ref={messageEndRef} />
     </div>
   );
 }
