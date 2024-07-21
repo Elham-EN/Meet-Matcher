@@ -1,7 +1,14 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import MessageSidebar from "./MessageSidebar";
+import { getMessageByContainer } from "../actions/messageActions";
 
-export default function MessagesPage() {
+interface Props {
+  searchParams: { container: string };
+}
+
+async function MessagesPage({ searchParams }: Props): Promise<ReactElement> {
+  const messages = await getMessageByContainer(searchParams.container);
+  console.log(messages);
   return (
     <div className="grid grid-cols-12 gap-5 h-[80vh] mt-10">
       <div className="col-span-2">
@@ -11,3 +18,5 @@ export default function MessagesPage() {
     </div>
   );
 }
+
+export default MessagesPage;

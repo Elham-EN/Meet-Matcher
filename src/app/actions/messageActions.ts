@@ -107,3 +107,45 @@ export async function getMessageThread(recipientId: string) {
     throw error;
   }
 }
+
+export async function getMessageByContainer(container: string) {
+  try {
+    const userId = await getAuthUserId();
+    // If user use outbox, then need to get the messages where the user id
+    // equals the sender id and if using the inbox then need to get messages
+    // where the user id is equal to the recipient id
+    const selector = container === "outbox" ? "senderId" : "recipientId";
+    const message = await prisma.message.findMany({
+      where: {
+        [selector]: userId,
+      },
+      orderBy: {
+        created: "desc",
+      },
+      select: {
+        id: true,
+        text: true,
+        created: true,
+        dateRead: true,
+        sender: {
+          select: {
+            userId: true,
+            name: true,
+            image: true,
+          },
+        },
+        recipient: {
+          select: {
+            userId: true,
+            name: true,
+            image: true,
+          },
+        },
+      },
+    });
+    return message.map((message) => mapMessageToMessageDto(message));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}

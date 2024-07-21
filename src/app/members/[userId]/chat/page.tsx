@@ -3,7 +3,6 @@ import CardInnerWrapper from "@/components/CardInnerWrapper";
 import ChatForm from "./ChatForm";
 import { getMessageThread } from "@/app/actions/messageActions";
 import MessageBox from "./MessageBox";
-import { MessageDto } from "@/libs/types";
 import { getAuthUserId } from "@/app/actions/authActions";
 
 interface Props {
