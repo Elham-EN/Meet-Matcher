@@ -44,7 +44,7 @@ export default function ChatForm(): ReactElement {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
-      <div className="flex items-center gap-3">
+      <div className="flex items-end gap-3 pb-2 h-20">
         <Input
           placeholder="Type a message"
           variant="faded"
