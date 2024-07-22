@@ -13,14 +13,16 @@ import {
   TableRow,
 } from "@nextui-org/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { Key, ReactElement, useCallback } from "react";
+import React, { Key, ReactElement, useCallback, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
+import { deleteMessage } from "../actions/messageActions";
 
 interface Props {
   messages: MessageDto[];
 }
 
 export default function MessageTable({ messages }: Props): ReactElement {
+  const [isDeleting, setIsDeleting] = useState({ id: "", loading: false });
   const router = useRouter();
   // check for the container to be equal to outbox if not than
   // by default it's equal to inbox
@@ -37,6 +39,16 @@ export default function MessageTable({ messages }: Props): ReactElement {
     { key: "created", label: isOutbox ? "Date sent" : "Date received" },
     { key: "actions", label: "Actions" },
   ];
+
+  const handleDeleteMessage = useCallback(
+    async (message: MessageDto) => {
+      setIsDeleting({ id: message.id, loading: true });
+      await deleteMessage(message.id, isOutbox);
+      router.refresh();
+      setIsDeleting({ id: "", loading: false });
+    },
+    [isOutbox, router]
+  );
 
   const handleRowSelect = (key: Key) => {
     // return message for the row user clicked on
@@ -73,13 +85,18 @@ export default function MessageTable({ messages }: Props): ReactElement {
           return cellValue;
         default:
           return (
-            <Button isIconOnly variant="light">
+            <Button
+              isIconOnly
+              variant="light"
+              onClick={() => handleDeleteMessage(item)}
+              isLoading={isDeleting.id === item.id && isDeleting.loading}
+            >
               <AiFillDelete size={24} className="text-danger" />
             </Button>
           );
       }
     },
-    [isOutbox]
+    [isOutbox, isDeleting.id, isDeleting.loading, handleDeleteMessage]
   );
 
   return (
