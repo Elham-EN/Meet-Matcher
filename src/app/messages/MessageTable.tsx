@@ -56,11 +56,7 @@ export default function MessageTable({ messages }: Props): ReactElement {
         case "recipientName":
         case "senderName":
           return (
-            <div
-              className={`flex items-center gap-2 cursor-pointer ${
-                !item.datedRead && !isOutbox ? "font-semibold" : ""
-              }`}
-            >
+            <div className="flex items-center gap-2 cursor-pointer">
               <Avatar
                 alt="Image of member"
                 src={
@@ -101,7 +97,11 @@ export default function MessageTable({ messages }: Props): ReactElement {
           {(item) => (
             <TableRow key={item.id} className="cursor-pointer">
               {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey as keyof MessageDto)}</TableCell>
+                <TableCell
+                  className={`${!item.datedRead && !isOutbox ? "font-semibold" : ""}`}
+                >
+                  {renderCell(item, columnKey as keyof MessageDto)}
+                </TableCell>
               )}
             </TableRow>
           )}
