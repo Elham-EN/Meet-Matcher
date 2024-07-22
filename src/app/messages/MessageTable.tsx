@@ -16,6 +16,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { Key, ReactElement, useCallback, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { deleteMessage } from "../actions/messageActions";
+import { truncateText } from "@/libs/utils/string-manipulation";
 
 interface Props {
   messages: MessageDto[];
@@ -80,7 +81,7 @@ export default function MessageTable({ messages }: Props): ReactElement {
             </div>
           );
         case "text":
-          return <div className="truncate">{cellValue}</div>;
+          return <div>{truncateText(cellValue!, 80)}</div>;
         case "created":
           return cellValue;
         default:
@@ -108,7 +109,14 @@ export default function MessageTable({ messages }: Props): ReactElement {
         shadow="none"
       >
         <TableHeader columns={columns}>
-          {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
+          {(column) => (
+            <TableColumn
+              key={column.key}
+              width={column.key === "text" ? "50%" : undefined}
+            >
+              {column.label}
+            </TableColumn>
+          )}
         </TableHeader>
         <TableBody items={messages} emptyContent="No messages for this container">
           {(item) => (
