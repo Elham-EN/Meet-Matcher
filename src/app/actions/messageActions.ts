@@ -100,6 +100,21 @@ export async function getMessageThread(recipientId: string) {
         },
       },
     });
+    // Message read functionaility
+    if (messages.length > 0) {
+      // Update 'read' property of any messages where the recipient id equals
+      // the user id
+      await prisma.message.updateMany({
+        where: {
+          senderId: recipientId,
+          recipientId: userId,
+          dateRead: null,
+        },
+        data: {
+          dateRead: new Date(),
+        },
+      });
+    }
     // Map one object to another object
     return messages.map((message) => mapMessageToMessageDto(message));
   } catch (error) {

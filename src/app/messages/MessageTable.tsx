@@ -58,7 +58,15 @@ export default function MessageTable({ messages }: Props): ReactElement {
         <TableBody items={messages} emptyContent="No messages for this container">
           {(item) => (
             <TableRow key={item.id} className="cursor-pointer">
-              {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+              {(columnKey) => (
+                <TableCell>
+                  <div
+                    className={`${!item.datedRead && !isOutbox ? "font-semibold" : ""}`}
+                  >
+                    {getKeyValue(item, columnKey)}
+                  </div>
+                </TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>
