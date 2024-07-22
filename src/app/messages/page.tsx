@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react";
 import MessageSidebar from "./MessageSidebar";
 import { getMessageByContainer } from "../actions/messageActions";
+import MessageTable from "./MessageTable";
 
 interface Props {
   searchParams: { container: string };
@@ -14,7 +15,9 @@ async function MessagesPage({ searchParams }: Props): Promise<ReactElement> {
       <div className="col-span-2">
         <MessageSidebar />
       </div>
-      <div className="col-span-10">Message table goes here</div>
+      <div className="col-span-10">
+        <MessageTable messages={messages} />
+      </div>
     </div>
   );
 }
