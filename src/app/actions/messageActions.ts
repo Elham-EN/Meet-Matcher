@@ -68,10 +68,12 @@ export async function getMessageThread(recipientId: string) {
           {
             senderId: userId,
             recipientId: recipientId,
+            senderDeleted: false,
           },
           {
             senderId: recipientId,
             recipientId: userId,
+            recipientDeleted: false,
           },
         ],
       },
@@ -126,14 +128,22 @@ export async function getMessageThread(recipientId: string) {
 export async function getMessageByContainer(container: string) {
   try {
     const userId = await getAuthUserId();
-    // If user use outbox, then need to get the messages where the user id
-    // equals the sender id and if using the inbox then need to get messages
-    // where the user id is equal to the recipient id
-    const selector = container === "outbox" ? "senderId" : "recipientId";
+    // If user delete the message as the user sent or recevied the message
+    // then it's not going to be deleted & how to prevent user from seeing
+    // a message that have been deleted but is still on the database?
+    const conditions = {
+      // If user use outbox, then need to get the messages where the user id
+      // equals the sender id and if using the inbox then need to get messages
+      // where the user id is equal to the recipient id
+      [container === "outbox" ? "senderId" : "recipientId"]: userId,
+      // If user is in the outbox, then then the 'senderDeleted' is false
+      // or if user is in the inbox then 'recipientDeleted is false
+      ...(container === "outbox"
+        ? { senderDeleted: false }
+        : { recipientDeleted: false }),
+    };
     const message = await prisma.message.findMany({
-      where: {
-        [selector]: userId,
-      },
+      where: conditions,
       orderBy: {
         created: "desc",
       },
@@ -159,6 +169,43 @@ export async function getMessageByContainer(container: string) {
       },
     });
     return message.map((message) => mapMessageToMessageDto(message));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function deleteMessage(messageId: string, isOutbox: boolean) {
+  const selector = isOutbox ? "senderDeleted" : "recipientDeleted";
+  try {
+    // Get current authenticated user id
+    const userId = await getAuthUserId();
+    // update 'senderDeleted' if it's the outbox or the 'recipientDeleted' if
+    // it's the inbox to true.
+    await prisma.message.update({
+      where: {
+        id: messageId,
+      },
+      data: {
+        [selector]: true,
+      },
+    });
+    // Check to see if both the sender of the message and the recipient of the
+    // message have both deleted the message.
+    const messageToDelete = await prisma.message.findMany({
+      where: {
+        OR: [
+          { senderId: userId, senderDeleted: true, recipientDeleted: true },
+          { recipientId: userId, senderDeleted: true, recipientDeleted: true },
+        ],
+      },
+    });
+    // If they have, than remove the message from the database
+    if (messageToDelete.length > 0) {
+      await prisma.message.deleteMany({
+        where: { OR: messageToDelete.map((m) => ({ id: m.id })) },
+      });
+    }
   } catch (error) {
     console.error(error);
     throw error;
