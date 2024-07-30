@@ -50,7 +50,7 @@ export async function createMessage(
     return { status: "success", data: messageDto };
   } catch (error) {
     console.error(error);
-    return { status: "error", error: "Something went wrong" };
+    return { status: "error", error: "Something went wrong with the server" };
   }
 }
 

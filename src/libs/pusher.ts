@@ -14,10 +14,11 @@ declare global {
 
 if (!global.pusherServerInstance) {
   global.pusherServerInstance = new PusherServer({
-    appId: process.env.PUSHER_APP_I!,
+    appId: process.env.PUSHER_APP_ID!,
     key: process.env.NEXT_PUBLIC_PUSHER_APP_KEY!,
     secret: process.env.PUSHER_SECRET!,
     cluster: "ap4",
+    // to communicate securely across a network
     useTLS: true,
   });
 }
