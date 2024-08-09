@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageDto } from "@/libs/types";
+import { timeAgo } from "@/libs/utils/date-manipulation";
 import { Avatar } from "@nextui-org/react";
 import clsx from "clsx";
 import React, { ReactElement, useEffect, useRef } from "react";
@@ -38,7 +39,9 @@ function MessageBox({ message, currentUserId }: Props): ReactElement {
     >
       {/* If the recipient have read the message, display when user read */}
       {message.datedRead && message.recipientId !== currentUserId ? (
-        <span className="text-xs text-black italic">(Read 4 mins ago)</span>
+        <span className="text-xs text-black italic">
+          (Read {timeAgo(message.datedRead)})
+        </span>
       ) : (
         <div></div>
       )}

@@ -96,18 +96,31 @@ export async function getMessageThread(recipientId: string) {
     });
     // Message read functionaility
     if (messages.length > 0) {
+      // Get a list of the read message ids and then pass that via pusher
+      // to the message list
+      const readMessageIds = messages
+        .filter(
+          (m) =>
+            m.dateRead === null &&
+            m.recipient?.userId === userId &&
+            m.sender?.userId === recipientId
+        )
+        .map((m) => m.id);
       // Update 'read' property of any messages where the recipient id equals
       // the user id
       await prisma.message.updateMany({
         where: {
-          senderId: recipientId,
-          recipientId: userId,
-          dateRead: null,
+          id: { in: readMessageIds },
         },
         data: {
           dateRead: new Date(),
         },
       });
+      await pusherServer.trigger(
+        createChatId(recipientId, userId),
+        "messages:read",
+        readMessageIds
+      );
     }
     // Map one object to another object
     return messages.map((message) => mapMessageToMessageDto(message));
