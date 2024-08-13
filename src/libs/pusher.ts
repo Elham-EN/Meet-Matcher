@@ -26,7 +26,12 @@ if (!global.pusherServerInstance) {
 if (!global.pusherClientInstance) {
   global.pusherClientInstance = new PusherClient(
     process.env.NEXT_PUBLIC_PUSHER_APP_KEY!,
-    { cluster: "ap4" }
+    {
+      // Create this endpoint in the route handler using server side action , so
+      // that pusher client can authorize users.
+      channelAuthorization: { endpoint: "/api/pusher-auth", transport: "ajax" },
+      cluster: "ap4",
+    }
   );
 }
 
